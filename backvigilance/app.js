@@ -15,6 +15,10 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// banco de dados (sempre colocar antes das rotas)
+const dbConnection = require('./config/database');
+dbConnection();
+
 
 //Configuração de rotas
 let indexRouter = require('./routes/index');
