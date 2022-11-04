@@ -2,13 +2,7 @@
 let User = require('../models/User');
 
 
-let usersData = [
-    {'id': 1, "nome": "Jessica", "cpf": "111.111.111-11" },
-    {'id': 2, "nome": "Ana Paula", "cpf": "222.222.222-22" } 
-    
-];
 
-let nextID = 3;
 
 module.exports ={
     //Buscar todos elementos (Usuarios)
@@ -28,15 +22,31 @@ module.exports ={
             res.status(200).json(usuarios[0])
         }     
     },
-    addUser : (req, res, next) =>{
-        let nome = req.body.nome;
-        let cpf = req.body.cpf;
+    addUser : async (req, res, next) =>{
+        let newUser = new User();
+        newUser.nome =  req.body.nome;
+        newUser.cpf = req.body.cpf;
+        newUser.telefone = req.body.telefone ? req.body.telefone: '';
+        // duas formas de trabalhar
+       /* newUser.save()
+        .then(savedUser =>{
+            return res.status(201).json({msg: "Usuário adicionado com sucesso !" , user: savedUser})
+        })
+        .catch (error =>{
+            return res.status (500).json({msg: "Erro ao salvar usuário" , error: error.message})
 
-        let newUser = new User(nextID, nome, cpf);
-        nextID++;
+        })*/
 
-        usersData.push(newUser);
-        return res.status(201).json({msg: "Usuário adicionado com sucesso!", user: newUser});
+        try{
+            let savdUser = await newUser.save();
+            return res.status(201).json({msg: "Usuário adicionado com sucesso !" , user: savedUser})
+        }catch (error){
+            return res.status (500).json({msg: "Erro ao salvar usuário" , error: error.message})}
+
+    
+
+
+       
 
     },
     updateUser: (req, res, next)=>{
