@@ -12,7 +12,6 @@ cpf:  {
     required: [true, "O CPF é obrigatório"], 
     unique: true, 
     match: /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/
-   
 },
 
 telefone: {
@@ -32,8 +31,7 @@ email:{
     required: true,
     validate:{
         validator: function(valor){
-           return /^([a-zA-Z]([a-zA-Z]|[0-9]|\-||_||.)+\@[a-zA-Z]{3,}\.(com|biz|io|me)(\.[a-zA-Z]{2,3})?)$/
-
+return /^([a-zA-Z]([a-zA-Z]|[0-9]|\-||_||.)+\@[a-zA-Z]{3,}\.(com|biz|io|me)(\.[a-zA-Z]{2,3})?)$/
         }
     }
 },
@@ -43,15 +41,9 @@ senha: {
     required: true,
     validate:{
         validator: function(valor){
-
-
         }
     }
-
-}
-
-});
-
+}});
 
 //nome da collection que eu quero colocar no banco
 module.exports = mongoose.model('User', userSchema);

@@ -1,18 +1,31 @@
 
 let User = require('../models/User');
 
-
-
-
 module.exports ={
     //Buscar todos elementos (Usuarios)
     getAllUsers : (req, res, next) =>{
-        res.status(200).json(usersData);
-    },
-    getUserByID: (req, res, next)=>{
-        let idUser = req.params.id;
+        User.find()
+            .then(users=>{
+            return res.status(200).json(users);
+            })   
+            .catch(error =>{
+            return res.status(500).json({msg: "Erro ao buscar usuários!", error: error.message})  
+            }
 
-        let usuarios = usersData.filter(function(usuario){
+            )
+    },
+
+    getUserByID: async (req, res, next)=>{
+        let idUser = req.params.id;
+try{
+    let user = await User.findById(idUser) // User.find({_id: idUser})
+    return res.status(200).json(user)
+} catch(error){
+    return res.status(500).json({msg: "Erro ao buscar usuário!", error: error.message})
+}
+    },
+
+        /*let usuarios = usersData.filter(function(usuario){
             return usuario.id == idUser;
         });
         console.log(usuarios);
@@ -21,14 +34,14 @@ module.exports ={
         }else{
             res.status(200).json(usuarios[0])
         }     
-    },
+    },*/
     addUser : async (req, res, next) =>{
         let newUser = new User();
         newUser.nome =  req.body.nome;
         newUser.cpf = req.body.cpf;
         newUser.telefone = req.body.telefone ? req.body.telefone: '';
         // duas formas de trabalhar
-       /* newUser.save()
+    /* newUser.save()
         .then(savedUser =>{
             return res.status(201).json({msg: "Usuário adicionado com sucesso !" , user: savedUser})
         })
@@ -38,18 +51,13 @@ module.exports ={
         })*/
 
         try{
-            let savdUser = await newUser.save();
+            let savedUser = await newUser.save();
             return res.status(201).json({msg: "Usuário adicionado com sucesso !" , user: savedUser})
         }catch (error){
-            return res.status (500).json({msg: "Erro ao salvar usuário" , error: error.message})}
-
-    
-
-
-       
-
+            return res.status (500).json({msg: "Erro ao salvar usuário" , error: error.message})
+        }
     },
-    updateUser: (req, res, next)=>{
+   /* updateUser: (req, res, next)=>{
         let idUser = req.params.id;
         let userData = req.body;
         let found = false;
@@ -64,9 +72,9 @@ module.exports ={
             }
         });
         if(!found) res.status(404).json({msg: "Usuário não encontrado"});     
-    },
+    },*/
 
-    deleteUser: (req, res, next)=>{
+  /*  deleteUser: (req, res, next)=>{
     let idUser = req.params.id;
     let found = false;
 
@@ -79,5 +87,5 @@ module.exports ={
         }
     });
     if(!found) res.status(404).json({msg: "Usuário não encontrado"});     
-    }
+    }*/
 }

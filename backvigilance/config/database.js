@@ -9,10 +9,12 @@ module.exports = function() {
         //quantidade de conexões suportadas
         pollSize: 10
     }
-    mongoose.conecct(url, options);
    //funções de callbeck, para ter feedback do que está acontecendo.
+
+    mongoose.connect(url, options);
+
     mongoose.connection.once('open', ()=>{
-        console.log("[Mongoose] Conectado em " +url);
+        console.log("[Mongoose] Conectado em " + url);
     });
 
     mongoose.connection.on('error', (error)=>{
