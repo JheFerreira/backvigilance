@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose')
 let Schema = mongoose.Schema
 let jwt = require('jsonwebtoken');
@@ -30,7 +29,7 @@ let usuarioSchema = new Schema({
         default: 'user'
     }
 });
-
+//criptografia de senha
 usuarioSchema.pre('save', function(next){
     const colaborador = this;
 
@@ -48,14 +47,14 @@ usuarioSchema.pre('save', function(next){
         return next();
     }
 });
-
+//comparação da senha com o que está gravado na senha
 usuarioSchema.methods.comparePassword = function(password, cb){
     bcrypt.compare(password, this.password, function(err, isMatch){
         if(err) return cb(err);
         else cb(null, isMatch);
     });
 }
-
+//acesso ao token
 usuarioSchema.methods.generateAuthToken = function(){
     return new Promisse ((sucess, reject)=>{
         const colaborador = this;

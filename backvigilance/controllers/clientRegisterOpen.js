@@ -47,3 +47,4 @@ senha: {
 
 //nome da collection que eu quero colocar no banco
 module.exports = mongoose.model('User', userSchema);
+

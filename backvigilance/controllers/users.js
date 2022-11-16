@@ -1,4 +1,3 @@
-
 let User = require('../models/User');
 
 module.exports ={
@@ -99,12 +98,3 @@ try{
     })
     }
 }
-
-            
-    
-    
-    
-       
-   
-     
-   
