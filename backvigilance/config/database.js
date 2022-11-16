@@ -2,12 +2,12 @@ let mongoose = require('mongoose');
 
 module.exports = function() {
    //conexão com o banco DB
-    let url =  process.env.DB || 'mongodb://localhost:27017/backVigilance';
+    let url = 'mongodb://127.0.0.1:27017/backVigilance';
     let options ={
         useNewUrlParser: true,
         useUnifiedTopology: true,
         //quantidade de conexões suportadas
-        pollSize: 10
+        //pollSize: 10
     }
    //funções de callbeck, para ter feedback do que está acontecendo.
 

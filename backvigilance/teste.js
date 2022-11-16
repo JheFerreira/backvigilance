@@ -1,10 +1,22 @@
+require('./config/database')();
+
 const User = require('./models/User');
 
-let user = new User();
+let users = new User();
+users.nome = 'Jessica'
+users.cpf = '111.111.111-11'
+users.email = 'teste@teste.com.br'
+users.senha = 'Admin5@0'
 
-user.cpf = '333.333.333-96'
-user.telefone = "(33) 9289-7726";
+let error = users.validateSync()
+if(error){
+    console.log(error.message);
+}
 
-let error = user.validateSync();
 
-console.log(error.message)
+users.save().then(user=>{
+    console.log(user);
+})
+.catch(error=>{
+    console.log(error.message);  
+})

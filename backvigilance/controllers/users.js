@@ -2,24 +2,27 @@
 let User = require('../models/User');
 
 module.exports ={
-    //Buscar todos elementos (Usuarios)
+
+
+//Buscar todos elementos (Usuarios)
     getAllUsers : (req, res, next) =>{
         User.find()
-            .then(users=>{
+        .then(users => {
             return res.status(200).json(users);
             })   
-            .catch(error =>{
+        .catch(error =>{
             return res.status(500).json({msg: "Erro ao buscar usuários!", error: error.message})  
-            }
-
-            )
+            });
     },
 
-    getUserByID: async (req, res, next)=>{
+   getUserByID: async (req, res, next)=>{
         let idUser = req.params.id;
 try{
-    let user = await User.findById(idUser) // User.find({_id: idUser})
-    return res.status(200).json(user)
+        let user = await User.findById(idUser) // User.find({_id: idUser})
+    if(user != null)
+        return res.status(200).json(user)
+    else
+    return res.status(500).json({msg: "Erro ao buscar usuário!", error: "Usuário não existe!"})
 } catch(error){
     return res.status(500).json({msg: "Erro ao buscar usuário!", error: error.message})
 }
@@ -39,6 +42,8 @@ try{
         let newUser = new User();
         newUser.nome =  req.body.nome;
         newUser.cpf = req.body.cpf;
+        newUser.email = req.body.email;
+        newUser.senha = req.body.senha;
         newUser.telefone = req.body.telefone ? req.body.telefone: '';
         // duas formas de trabalhar
     /* newUser.save()
@@ -50,42 +55,56 @@ try{
 
         })*/
 
-        try{
+       try{
             let savedUser = await newUser.save();
             return res.status(201).json({msg: "Usuário adicionado com sucesso !" , user: savedUser})
         }catch (error){
             return res.status (500).json({msg: "Erro ao salvar usuário" , error: error.message})
         }
     },
-   /* updateUser: (req, res, next)=>{
+
+   updateUser: async (req, res, next)=>{
         let idUser = req.params.id;
-        let userData = req.body;
-        let found = false;
 
-        
-        User.forEach((user, index) => {
-            if(user.id == idUser){
-                found = true;
-                user[index].nome = userData.nome;
-                user[index].cpf = userData.cfp;
-                res.status(200).json({msg: "Usuário alterado com sucesso"});
-            }
-        });
-        if(!found) res.status(404).json({msg: "Usuário não encontrado"});     
-    },*/
+        let userUpdate = {} ;
+        if(req.body.nome) userUpdate.nome = req.body.nome;
+        if(req.body.cpf) userUpdate.cpf = req.body.cpf;
+        if(req.body.telefone) userUpdate.telefone = req.body.telefone;
+        if(req.body.email) userUpdate.email = req.body.email;
+        if(req.body.senha) userUpdate.senha = req.body.senha;
 
-  /*  deleteUser: (req, res, next)=>{
+       try{
+            await User.updateOne ({_id: idUser}, userUpdate)
+
+            return res.status(200).json({msg: "Usuário atualizado com sucesso"});
+
+       }catch(error){
+        res.status(500).json({msg: "Erro ao atualizar usuário ! ", error: error.message}) 
+
+       }
+       
+    }, 
+
+
+    deleteUser: (req, res, next)=>{
     let idUser = req.params.id;
-    let found = false;
+    
+    User.findByIdAndDelete(idUser)
+    .then(userDeleted =>{
+        res.status(200).json({msg: "Usuário removido com sucesso" , user: userDeleted});
+    })
+    .catch(error =>{
+        res.status(500).json({msg: "Erro ao remover usuário ! ", error: error.message})   
 
-    User.forEach((user, index) => {
-        if(user.id == idUser){
-            found = true;
-            user.splice(index, 1)
-            console.log("Users: ", user)
-            res.status(200).json({msg: "Usuário removido com sucesso"});
-        }
-    });
-    if(!found) res.status(404).json({msg: "Usuário não encontrado"});     
-    }*/
+    })
+    }
 }
+
+            
+    
+    
+    
+       
+   
+     
+   
